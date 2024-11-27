@@ -60,4 +60,27 @@ class Klien extends Model
             $client = null;
         }
     }
+
+    public function update()
+    {
+        try {
+            $stmt = $this->db->prepare("
+                UPDATE client SET
+                email = :email,
+                full_name = :full_name,
+                username = :username,
+                phone_number = :phone_number
+                WHERE id_client = :id_client
+            ");
+            $stmt->bindParam(':email', $this->email);
+            $stmt->bindParam(':full_name', $this->name);
+            $stmt->bindParam(':username', $this->username);
+            $stmt->bindParam(':phone_number', $this->phone);
+            $stmt->bindParam(':id_client', $this->id, \PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            return ["message" => $e->getMessage()];
+        }
+    }
 }
