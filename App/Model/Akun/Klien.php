@@ -2,10 +2,10 @@
 
 namespace App\Model\Akun;
 
-use App\Model\Model;
+use App\Model\Akun\User;
 
 
-class Klien extends Model
+class Klien extends User
 {
     public int $id;
     public string $email;
