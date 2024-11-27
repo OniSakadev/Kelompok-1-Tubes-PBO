@@ -79,4 +79,39 @@ class Freelance extends Model
             $freelancer = null;
         }
     }
+
+    public function update()
+    {
+        try {
+            $stmt = $this->db->prepare("
+                UPDATE freelancer SET
+                email = :email,
+                full_name = :full_name,
+                user_name = :user_name,
+                phone_number = :phone_number,
+                birth_date = :birth_date,
+                place_of_birth = :place_of_birth,
+                gender = :gender,
+                job_position = :job_position,
+                skills = :skills,
+                about_you = :about_you
+                WHERE id_freelancer = :id_freelancer
+            ");
+            $stmt->bindParam(':email', $this->email);
+            $stmt->bindParam(':full_name', $this->name);
+            $stmt->bindParam(':user_name', $this->username);
+            $stmt->bindParam(':phone_number', $this->phone);
+            $stmt->bindParam(':birth_date', $this->birth);
+            $stmt->bindParam(':place_of_birth', $this->place);
+            $stmt->bindParam(':gender', $this->gender);
+            $stmt->bindParam(':job_position', $this->job);
+            $stmt->bindParam(':skills', $this->skill);
+            $stmt->bindParam(':about_you', $this->about);
+            $stmt->bindParam(':id_freelancer', $this->id, \PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            return ["message" => $e->getMessage()];
+        }
+    }
 }
