@@ -36,9 +36,18 @@ $app->post('/freelance/add', function (Request $request, Response $response) {
     $freelancer->job = $req_freelancer['job_position'];
     $freelancer->skill = $req_freelancer['skills'];
     $freelancer->about = $req_freelancer['about_you'];
-    $response->getBody()->write(json_encode($freelancer->save()));
+    $response->getBody()->write(json_encode($freelancer->register()));
     return $response;
 });
+
+$app->get('/freelance/find/{id}', function (Request $request, Response $response, $args) {
+    $id_freelancer = $args['id'];
+    $freelancer = new Freelance;
+    $freelancer->find($id_freelancer);
+    $response->getBody()->write(json_encode($freelancer));
+    return $response;
+});
+
 
 $app->post('/klien/add', function (Request $request, Response $response) {
     $req_freelancer = $request->getParsedBody();
@@ -48,7 +57,15 @@ $app->post('/klien/add', function (Request $request, Response $response) {
     $freelancer->name = $req_freelancer['full_name'];
     $freelancer->username = $req_freelancer['username'];
     $freelancer->phone = $req_freelancer['phone_number'];
-    $response->getBody()->write(json_encode($freelancer->save()));
+    $response->getBody()->write(json_encode($freelancer->register()));
+    return $response;
+});
+
+$app->get('/klien/find/{id}', function (Request $request, Response $response, $args) {
+    $id_client = $args['id'];
+    $client = new Klien;
+    $client->find($id_client);
+    $response->getBody()->write(json_encode($client));
     return $response;
 });
 

@@ -14,7 +14,7 @@ class Klien extends Model
     public string $username;
     public string $phone;
 
-    public function save()
+    public function register()
     {
         try {
             $stmt = $this->db->prepare("
@@ -43,5 +43,21 @@ class Klien extends Model
             $result = ["message" => $e->getMessage()];
         }
         return $result;
+    }
+
+    public function find($id_client)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM client WHERE id_client = {$id_client}");
+        if ($stmt->execute()) {
+            $client = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $this->id = $client['id_client'];
+            $this->email = $client['email'];
+            $this->password = $client['password'];
+            $this->name = $client['full_name'];
+            $this->username = $client['username'];
+            $this->phone = $client['phone_number'];
+        } else {
+            $client = null;
+        }
     }
 }
