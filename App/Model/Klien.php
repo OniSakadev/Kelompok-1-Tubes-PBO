@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Model\Akun;
+namespace App\Model;
 
-use App\Model\Akun\User;
+use App\Model\DB;
 
-
-class Klien extends User
+class Klien extends DB
 {
     public int $id;
     public string $email;
@@ -17,32 +16,18 @@ class Klien extends User
     public function register()
     {
         try {
-            $stmt = $this->db->prepare("
-            INSERT INTO client
-            (email, password, full_name, username, phone_number)
-            VALUES
-            (:email, :password, :full_name, :username, :phone_number)");
+            $stmt = $this->db->prepare("INSERT INTO client (email, password, full_name, username, phone_number) VALUES (:email, :password, :full_name, :username, :phone_number)");
             $stmt->bindParam(':email', $this->email);
             $stmt->bindParam(':password', $this->password);
             $stmt->bindParam(':full_name', $this->name);
             $stmt->bindParam(':username', $this->username);
             $stmt->bindParam(':phone_number', $this->phone);
-            $status = $stmt->execute();
-
-
-            $stmt = $this->db->query("SELECT LAST_INSERT_ID()");
-            $last_id = $stmt->fetchColumn();
-
-
-            $result = [
-                'status' => $status,
-                'id' => $last_id
-            ];
+            $stmt->execute();
+            return ["success" => true];
         } catch (\PDOException $e) {
             http_response_code(500);
             $result = ["message" => $e->getMessage()];
         }
-        return $result;
     }
 
     public function find($id_client)
@@ -64,14 +49,7 @@ class Klien extends User
     public function update()
     {
         try {
-            $stmt = $this->db->prepare("
-                UPDATE client SET
-                email = :email,
-                full_name = :full_name,
-                username = :username,
-                phone_number = :phone_number
-                WHERE id_client = :id_client
-            ");
+            $stmt = $this->db->prepare("UPDATE client SET email = :email, full_name = :full_name, username = :username, phone_number = :phone_number WHERE id_client = :id_client");
             $stmt->bindParam(':email', $this->email);
             $stmt->bindParam(':full_name', $this->name);
             $stmt->bindParam(':username', $this->username);
