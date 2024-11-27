@@ -20,7 +20,7 @@ class Freelance extends Model
     public string $skill;
     public string $about;
 
-    public function save()
+    public function register()
     {
         try {
             $stmt = $this->db->prepare("
@@ -56,5 +56,27 @@ class Freelance extends Model
             $result = ["message" => $e->getMessage()];
         }
         return $result;
+    }
+
+    public function find($id_freelancer)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM freelancer WHERE id_freelancer = {$id_freelancer}");
+        if ($stmt->execute()) {
+            $freelancer = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $this->id = $freelancer['id_freelancer'];
+            $this->email = $freelancer['email'];
+            $this->password = $freelancer['password'];
+            $this->name = $freelancer['full_name'];
+            $this->username = $freelancer['user_name'];
+            $this->phone = $freelancer['phone_number'];
+            $this->birth = $freelancer['birth_date'];
+            $this->place = $freelancer['place_of_birth'];
+            $this->gender = $freelancer['gender'];
+            $this->job = $freelancer['job_position'];
+            $this->skill = $freelancer['skills'];
+            $this->about = $freelancer['about_you'];
+        } else {
+            $freelancer = null;
+        }
     }
 }
