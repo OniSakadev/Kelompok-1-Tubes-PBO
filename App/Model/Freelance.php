@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Model\Akun;
+namespace App\Model;
 
-use App\Model\Akun\User;
+use App\Model\DB;
+use PDOException;
 
-
-class Freelance extends User
+class Freelance extends DB
 {
     public int $id;
     public string $email;
@@ -20,15 +20,11 @@ class Freelance extends User
     public string $skill;
     public string $about;
 
+
     public function register()
     {
         try {
-            $stmt = $this->db->prepare("
-            INSERT INTO freelancer
-            (email, password, full_name, user_name, phone_number, birth_date, place_of_birth, gender, job_position, skills, about_you)
-            VALUES
-            (:email, :password, :full_name, :user_name, :phone_number, :birth_date, :place_of_birth, :gender, :job_position, :skills, :about_you)
-            ");
+            $stmt = $this->db->prepare("INSERT INTO freelancer (email, password, full_name, user_name, phone_number, birth_date, place_of_birth, gender, job_position, skills, about_you) VALUES (:email, :password, :full_name, :user_name, :phone_number, :birth_date, :place_of_birth, :gender, :job_position, :skills, :about_you)");
             $stmt->bindParam(':email', $this->email);
             $stmt->bindParam(':password', $this->password);
             $stmt->bindParam(':full_name', $this->name);
@@ -40,22 +36,12 @@ class Freelance extends User
             $stmt->bindParam(':job_position', $this->job);
             $stmt->bindParam(':skills', $this->skill);
             $stmt->bindParam(':about_you', $this->about);
-            $status = $stmt->execute();
-
-
-            $stmt = $this->db->query("SELECT LAST_INSERT_ID()");
-            $last_id = $stmt->fetchColumn();
-
-
-            $result = [
-                'status' => $status,
-                'id' => $last_id
-            ];
-        } catch (\PDOException $e) {
+            $stmt->execute();
+            return ["success" => true];
+        } catch (PDOException $e) {
             http_response_code(500);
-            $result = ["message" => $e->getMessage()];
+            return ["message" => $e->getMessage()];
         }
-        return $result;
     }
 
     public function find($id_freelancer)
@@ -83,20 +69,7 @@ class Freelance extends User
     public function update()
     {
         try {
-            $stmt = $this->db->prepare("
-                UPDATE freelancer SET
-                email = :email,
-                full_name = :full_name,
-                user_name = :user_name,
-                phone_number = :phone_number,
-                birth_date = :birth_date,
-                place_of_birth = :place_of_birth,
-                gender = :gender,
-                job_position = :job_position,
-                skills = :skills,
-                about_you = :about_you
-                WHERE id_freelancer = :id_freelancer
-            ");
+            $stmt = $this->db->prepare("UPDATE freelancer SET email = :email, full_name = :full_name, user_name = :user_name, phone_number = :phone_number, birth_date = :birth_date, place_of_birth = :place_of_birth, gender = :gender, job_position = :job_position, skills = :skills, about_you = :about_you WHERE id_freelancer = :id_freelancer");
             $stmt->bindParam(':email', $this->email);
             $stmt->bindParam(':full_name', $this->name);
             $stmt->bindParam(':user_name', $this->username);

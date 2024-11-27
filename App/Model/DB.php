@@ -11,7 +11,7 @@ use PDO;
 use PDOException;
 
 
-class Model
+class DB
 {
     protected $db;
 
@@ -25,10 +25,5 @@ class Model
         } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
         }
-    }
-
-    public function getDB()
-    {
-        return $this->db;
     }
 }
