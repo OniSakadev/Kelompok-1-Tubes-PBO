@@ -104,10 +104,10 @@ $app->post('/category/tambah', function (Request $request, Response $response) {
     return $controller->tambah($request, $response);
 });
 
-$app->post('/service/create/{id}', function (Request $request, Response $response, $args) {
+$app->post('/service/create', function (Request $request, Response $response) {
     $db = new DB();
     $controller = new ServiceController($db);
-    return $controller->create($request, $response, $args);
+    return $controller->create($request, $response);
 });
 
 $app->get('/service/find/{id}', function (Request $request, Response $response, $args) {

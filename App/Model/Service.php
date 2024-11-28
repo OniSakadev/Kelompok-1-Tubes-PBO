@@ -5,7 +5,8 @@ namespace App\Model;
 use App\Model\DB;
 use PDOException;
 
-class Service extends DB{
+class Service extends DB
+{
     private $conn;
     private $table_name = "service";
 
@@ -22,10 +23,10 @@ class Service extends DB{
 
 
     // Create Service
-    public function create() 
+    public function create()
     {
         try {
-            $stmt = $this->db->prepare("INSERT INTO service (id_service, id_freelancer, id_category, sub_category, title, description, industry, skills, deadline, price) VALUES (:id_service, :id_freelancer, :id_category, :sub_category, :title, :description, :industry, :skills, :deadline, :price)");
+            $stmt = $this->db->prepare("INSERT INTO service (id_freelancer, id_category, sub_category, title, description, industry, skills, deadline, price) VALUES (:id_freelancer, :id_category, :sub_category, :title, :description, :industry, :skills, :deadline, :price)");
             $stmt->bindParam(":id_freelancer", $this->id_freelancer);
             $stmt->bindParam(":id_category", $this->id_category);
             $stmt->bindParam(":sub_category", $this->sub_category);
@@ -35,6 +36,7 @@ class Service extends DB{
             $stmt->bindParam(":skills", $this->skills);
             $stmt->bindParam(":deadline", $this->deadline);
             $stmt->bindParam(":price", $this->price);
+            $stmt->execute();
             return ["success" => true];
         } catch (PDOException $e) {
             http_response_code(500);
@@ -66,8 +68,7 @@ class Service extends DB{
     public function update()
     {
         try {
-            $stmt = $this->db->prepare("UPDATE service SET id_category = :id_category, sub_category = :sub_category, title = :title, description = :description, industry = :industry, skills = :skills, deadline = :deadline, price = :price WHERE id_service = :id_service");
-            $stmt->bindParam(':id_category', $this->id_category);
+            $stmt = $this->db->prepare("UPDATE service SET sub_category = :sub_category, title = :title, description = :description, industry = :industry, skills = :skills, deadline = :deadline, price = :price WHERE id_service = :id_service");
             $stmt->bindParam(':sub_category', $this->sub_category);
             $stmt->bindParam(':title', $this->title);
             $stmt->bindParam(':description', $this->description);
@@ -95,4 +96,3 @@ class Service extends DB{
         }
     }
 }
-?>

@@ -17,7 +17,6 @@ class ServiceController extends DB
         $service = new Service($this->db);
 
         try {
-            $service->id_service = $data['id_service'];
             $service->id_freelancer = $data['id_freelancer'];
             $service->id_category = $data['id_category'];
             $service->sub_category = $data['sub_category'];
@@ -56,10 +55,9 @@ class ServiceController extends DB
     {
         $data = $request->getParsedBody();
         $id_service = $args['id'];
-        $service = new Service ($this->db);
+        $service = new Service($this->db);
         try {
             $service->id_service = $id_service;
-            $service->id_category = $data['id_category'];
             $service->sub_category = $data['sub_category'];
             $service->title = $data['title'];
             $service->description = $data['description'];
