@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\CategoryController;
 use App\Model\DB;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -84,5 +85,22 @@ $app->post('/review/delete/{id}', function (Request $request, Response $response
     return $controller->delete($request, $response, $args);
 });
 
+$app->get('/category/getAllCategories', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new CategoryController($db);
+    return $controller->getAllCategories($request, $response, $args);
+});
+
+$app->get('/category/getCategoryById/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new CategoryController($db);
+    return $controller->getCategoryById($request, $response, $args);
+});
+
+$app->post('/category/tambah', function (Request $request, Response $response) {
+    $db = new DB();
+    $controller = new CategoryController($db);
+    return $controller->tambah($request, $response);
+});
 
 $app->run();
