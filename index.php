@@ -9,6 +9,7 @@ use Selective\BasePath\BasePathMiddleware;
 use App\Controllers\KlienController;
 use App\Controllers\FreelanceController;
 use App\Controllers\ReviewController;
+use App\Controllers\ServiceController;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -101,6 +102,30 @@ $app->post('/category/tambah', function (Request $request, Response $response) {
     $db = new DB();
     $controller = new CategoryController($db);
     return $controller->tambah($request, $response);
+});
+
+$app->post('/service/create/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new ServiceController($db);
+    return $controller->create($request, $response, $args);
+});
+
+$app->get('/service/find/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new ServiceController($db);
+    return $controller->find($request, $response, $args);
+});
+
+$app->post('/service/update/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new ServiceController($db);
+    return $controller->update($request, $response, $args);
+});
+
+$app->delete('/service/delete/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new ServiceController($db);
+    return $controller->delete($request, $response, $args);
 });
 
 $app->run();
