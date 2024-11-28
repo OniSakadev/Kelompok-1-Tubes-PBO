@@ -1,14 +1,13 @@
 <?php
 
 use App\Model\DB;
-use App\Model\Klien;
-use App\Model\Freelance;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use Selective\BasePath\BasePathMiddleware;
 use App\Controllers\KlienController;
 use App\Controllers\FreelanceController;
+use App\Controllers\ReviewController;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -59,6 +58,30 @@ $app->post('/klien/update/{id}', function (Request $request, Response $response,
     $db = new DB();
     $controller = new KlienController($db);
     return $controller->update($request, $response, $args);
+});
+
+$app->post('/review/add', function (Request $request, Response $response) {
+    $db = new DB();
+    $controller = new ReviewController($db);
+    return $controller->tambah($request, $response);
+});
+
+$app->get('/review/find/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new ReviewController($db);
+    return $controller->find($request, $response, $args);
+});
+
+$app->post('/review/update/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new ReviewController($db);
+    return $controller->update($request, $response, $args);
+});
+
+$app->post('/review/delete/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new ReviewController($db);
+    return $controller->delete($request, $response, $args);
 });
 
 
