@@ -66,10 +66,8 @@ class Order extends DB
     public function update()
     {
         try {
-            $stmt = $this->db->prepare("UPDATE `order` SET order_detail = :order_detail, order_date = :order_date, WHERE id_order = :id_order");
+            $stmt = $this->db->prepare("UPDATE `order` SET order_detail = :order_detail WHERE id_order = :id_order");
             $stmt->bindParam(':order_detail', $this->order_detail);
-            $stmt->bindParam(':supported_file', $this->supported_file);
-            $stmt->bindParam(':order_date', $this->order_date);
             $stmt->bindParam(':id_order', $this->id_order, \PDO::PARAM_INT);
             return $stmt->execute();
         } catch (\PDOException $e) {
@@ -78,10 +76,10 @@ class Order extends DB
         }
     }
 
-    public function delete($id_oder)
+    public function delete($id_order)
     {
         try {
-            $stmt = $this->db->prepare("DELETE FROM review WHERE id_oder = {$id_oder}");
+            $stmt = $this->db->prepare("DELETE FROM `order` WHERE id_order = {$id_order}");
             return $stmt->execute();
         } catch (\PDOException $e) {
             http_response_code(500);

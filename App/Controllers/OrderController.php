@@ -7,7 +7,7 @@ use App\Model\Order;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Exception;
-use PDO; 
+use PDO;
 use PDOException; // Pastikan ini ditambahkan jika belum ada
 
 class OrderController extends DB
@@ -48,79 +48,37 @@ class OrderController extends DB
             return $response->withHeader('content-type', 'application/json')->withStatus(500);
         }
     }
-    
-    public function addRequirement(Request $request, Response $response, $args): Response
+
+    public function update(Request $request, Response $response, $args): Response
     {
         $data = $request->getParsedBody();
         $id_order = $args['id'];
         $order = new Order($this->db);
-
         try {
-            // Validasi input
-            if (!isset($data['requirement'])) {
-                throw new Exception('Requirement is required');
-            }
-
             $order->id_order = $id_order;
-            $result = $order->addRequirement($data['requirement']);
-
+            $order->order_detail = $data['order_detail'];
+            $result = $order->update();
             $response->getBody()->write(json_encode($result));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
         } catch (PDOException $e) {
-            $error = ["message" => "Database error: " . $e->getMessage()];
-        } catch (Exception $e) {
             $error = ["message" => $e->getMessage()];
+            $response->getBody()->write(json_encode($error));
+            return $response->withHeader('content-type', 'application/json')->withStatus(500);
         }
-
-        $response->getBody()->write(json_encode($error));
-        return $response->withHeader('content-type', 'application/json')->withStatus(500);
     }
 
-    public function submitDelivery(Request $request, Response $response, $args): Response
+    public function delete(Request $request, Response $response, $args): Response
     {
-        $data = $request->getParsedBody();
-        $id_order = $args['id'];
-        $order = new Order($this->db);
-
         try {
-            // Validasi input
-            if (!isset($data['delivered_file'])) {
-                throw new Exception('Delivered file is required');
-            }
-
-            $order->id_order = $id_order;
-            $result = $order->submitDelivery($data['delivered_file']);
-
-            $response->getBody()->write(json_encode($result));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+            $id_order = $args['id'];
+            $order = new Order($this->db);
+            $order->delete($id_order);
+            $response->getBody()->write(json_encode(["message" => "order Dihapus"]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
         } catch (PDOException $e) {
-            $error = ["message" => "Database error: " . $e->getMessage()];
-        } catch (Exception $e) {
             $error = ["message" => $e->getMessage()];
+            $response->getBody()->write(json_encode($error));
+            return $response->withHeader('content-type', 'application/json')->withStatus(500);
         }
-
-        $response->getBody()->write(json_encode($error));
-        return $response->withHeader('content-type', 'application/json')->withStatus(500);
-    }
-
-    public function acceptDelivery(Request $request, Response $response, $args): Response
-    {
-        $id_order = $args['id'];
-        $order = new Order($this->db);
-
-        try {
-            $order->id_order = $id_order;
-            $result = $order->acceptDelivery();
-
-            $response->getBody()->write(json_encode($result));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-        } catch (PDOException $e) {
-            $error = ["message" => "Database error: " . $e->getMessage()];
-        } catch (Exception $e) {
-            $error = ["message" => $e->getMessage()];
-        }
-
-        $response->getBody()->write(json_encode($error));
-        return $response->withHeader('content-type', 'application/json')->withStatus(500);
     }
 }
