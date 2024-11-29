@@ -14,12 +14,12 @@ class Service extends DB
     public int $id_freelancer;
     public int $id_category;
     public $sub_category;
-    public $title;
-    public $description;
-    public $industry;
-    public $skills;
-    public $deadline;
-    public $price;
+    public string $title;
+    public string $description;
+    public string $industry;
+    public string $skills;
+    public string $deadline;
+    public float $price;
 
 
     // Create Service
