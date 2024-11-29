@@ -37,14 +37,8 @@ class PaymentController extends DB
             $id_payment = $args['id'];
             $payment = new Payment($this->db);
             $payment->getAllPayment($id_payment);
-
-            if (isset($categoryData['id_category'])) {
-                $response->getBody()->write(json_encode($payment));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-            } else {
-                $response->getBody()->write(json_encode($payment));
-                return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
-            }
+            $response->getBody()->write(json_encode($payment));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);    
         } catch (PDOException $e) {
             $error = ["message" => $e->getMessage()];
             $response->getBody()->write(json_encode($error));
