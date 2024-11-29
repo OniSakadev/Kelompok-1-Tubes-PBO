@@ -7,9 +7,6 @@ use PDOException;
 
 class Service extends DB
 {
-    private $conn;
-    private $table_name = "service";
-
     public int $id_service;
     public int $id_freelancer;
     public int $id_category;
