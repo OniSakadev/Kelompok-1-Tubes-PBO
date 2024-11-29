@@ -50,22 +50,30 @@ class Payment extends DB
     public function updatePayment()
     {
         try {
-            $stmt = $this->db->prepare("UPDATE payment SET id_order = :id_order, payment_method = :payment_method, payment_status = :payment_status, payment_date = :payment_date, price = :price WHERE id_payment = :id_payment");
-            $stmt->bindParam(':id_order', $id_order);
-            $stmt->bindParam(':payment_method', $payment_method);
-            $stmt->bindParam(':payment_status', $payment_status);
-            $stmt->bindParam(':payment_date', $payment_date);
-            $stmt->bindParam(':total_price', $total_price);
+            $stmt = $this->db->prepare("UPDATE payment 
+            SET id_order = :id_order, 
+                payment_method = :payment_method, 
+                payment_status = :payment_status, 
+                payment_date = :payment_date, 
+                total_price = :total_price 
+            WHERE id_payment = :id_payment");
+
+            $stmt->bindParam(':id_order', $this->id_order);
+            $stmt->bindParam(':payment_method', $this->payment_method);
+            $stmt->bindParam(':payment_status', $this->payment_status);
+            $stmt->bindParam(':payment_date', $this->payment_date);
+            $stmt->bindParam(':total_price', $this->total_price);
+            $stmt->bindParam(':id_payment', $this->id_payment);
+
             $stmt->execute();
 
             if ($stmt->rowCount() > 0) {
                 return ["success" => true, "message" => "Payment updated successfully"];
             } else {
-                return ["success" => false, "message" => "Failed to update payment"];
+                return ["success" => false, "message" => "No changes made"];
             }
         } catch (\PDOException $e) {
-            http_response_code(500);
-            return ["message" => $e->getMessage()];
+            return ["success" => false, "message" => $e->getMessage()];
         }
     }
 
