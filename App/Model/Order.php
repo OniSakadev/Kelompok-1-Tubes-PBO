@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Model\DB;
 use PDOException;
+use ReflectionFunctionAbstract;
 
 class Order extends DB
 {
@@ -24,7 +25,7 @@ class Order extends DB
             $order_detail = $this->order_detail;
             $supported_file = $this->supported_file;
             $order_date = $this->order_date;
-    
+
             $stmt = $this->db->prepare(
                 "INSERT INTO `order` (id_freelancer, id_client, id_service, order_detail, supported_file, order_date) 
                  VALUES (:id_freelancer, :id_client, :id_service, :detail, :file, :date)"
@@ -36,7 +37,7 @@ class Order extends DB
             $stmt->bindParam(':file', $supported_file);
             $stmt->bindParam(':date', $order_date);
             $stmt->execute();
-    
+
             $this->id_order = $this->db->lastInsertId();
             return ["success" => true];
         } catch (PDOException $e) {
@@ -62,89 +63,29 @@ class Order extends DB
         }
     }
 
-    /**
-     * Tambahkan requirement ke order
-     */
-    public function addRequirement(string $requirement): array
+    public function update()
     {
-        if (!isset($this->id_order)) {
-            return [
-                "success" => false,
-                "message" => "Order ID not set",
-            ];
-        }
-
         try {
-            $stmt = $this->db->prepare(
-                "UPDATE `order` SET order_detail = CONCAT(order_detail, :requirement) WHERE id_order = :order_id"
-            );
-            $stmt->bindParam(':requirement', $requirement);
-            $stmt->bindParam(':order_id', $this->id_order, \PDO::PARAM_INT);
-            $stmt->execute();
-
-            return ["success" => true];
-        } catch (PDOException $e) {
-            return [
-                "success" => false,
-                "message" => $e->getMessage(),
-            ];
+            $stmt = $this->db->prepare("UPDATE `order` SET order_detail = :order_detail, order_date = :order_date, WHERE id_order = :id_order");
+            $stmt->bindParam(':order_detail', $this->order_detail);
+            $stmt->bindParam(':supported_file', $this->supported_file);
+            $stmt->bindParam(':order_date', $this->order_date);
+            $stmt->bindParam(':id_order', $this->id_order, \PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            return ["message" => $e->getMessage()];
         }
     }
 
-    /**
-     * Submit pengiriman file
-     */
-    public function submitDelivery(string $deliveredFile): array
+    public function delete($id_oder)
     {
-        if (!isset($this->id_order)) {
-            return [
-                "success" => false,
-                "message" => "Order ID not set",
-            ];
-        }
-
         try {
-            $stmt = $this->db->prepare(
-                "UPDATE `order` SET supported_file = :delivered_file, status = 'delivered' WHERE id_order = :order_id"
-            );
-            $stmt->bindParam(':delivered_file', $deliveredFile);
-            $stmt->bindParam(':order_id', $this->id_order, \PDO::PARAM_INT);
-            $stmt->execute();
-
-            return ["success" => true];
-        } catch (PDOException $e) {
-            return [
-                "success" => false,
-                "message" => $e->getMessage(),
-            ];
-        }
-    }
-
-    /**
-     * Terima pengiriman file
-     */
-    public function acceptDelivery(): array
-    {
-        if (!isset($this->id_order)) {
-            return [
-                "success" => false,
-                "message" => "Order ID not set",
-            ];
-        }
-
-        try {
-            $stmt = $this->db->prepare(
-                "UPDATE `order` SET status = 'accepted' WHERE id_order = :order_id"
-            );
-            $stmt->bindParam(':order_id', $this->id_order, \PDO::PARAM_INT);
-            $stmt->execute();
-
-            return ["success" => true];
-        } catch (PDOException $e) {
-            return [
-                "success" => false,
-                "message" => $e->getMessage(),
-            ];
+            $stmt = $this->db->prepare("DELETE FROM review WHERE id_oder = {$id_oder}");
+            return $stmt->execute();
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            return ["message" => $e->getMessage()];
         }
     }
 }
