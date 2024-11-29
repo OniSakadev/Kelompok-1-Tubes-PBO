@@ -8,6 +8,7 @@ use Slim\Factory\AppFactory;
 use Selective\BasePath\BasePathMiddleware;
 use App\Controllers\KlienController;
 use App\Controllers\FreelanceController;
+use App\Controllers\OrderController;
 use App\Controllers\ReviewController;
 use App\Controllers\ServiceController;
 use App\Controllers\PaymentController;
@@ -174,6 +175,18 @@ $app->delete('/payment/delete/{id}', function (Request $request, Response $respo
     $db = new DB();
     $controller = new PaymentController($db);
     return $controller->deletePayment($request, $response, $args);
+});
+
+$app->post('/order/add', function (Request $request, Response $response) {
+    $db = new DB();
+    $controller = new OrderController($db);
+    return $controller->tambah($request, $response);
+});
+
+$app->get('/order/find/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new OrderController($db);
+    return $controller->find($request, $response, $args);
 });
 
 $app->run();
