@@ -98,5 +98,4 @@ class Freelance extends DB
             return ["message" => $e->getMessage()];
         }
     }
-
 }
