@@ -68,6 +68,12 @@ $app->post('/klien/update/{id}', function (Request $request, Response $response,
     return $controller->update($request, $response, $args);
 });
 
+$app->post('/klien/delete/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new KlienController($db);
+    return $controller->delete($request, $response, $args);
+});
+
 $app->post('/review/add', function (Request $request, Response $response) {
     $db = new DB();
     $controller = new ReviewController($db);
