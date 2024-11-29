@@ -79,4 +79,20 @@ class FreelanceController extends DB
             return $response->withHeader('content-type', 'application/json')->withStatus(500);
         }
     }
+
+    public function delete(Request $request, Response $response, $args): Response
+    {
+        try {
+            $id_freelancer = $args['id'];
+            $freelance = new Freelance($this->db);
+            $freelance->delete($id_freelancer);
+            $response->getBody()->write(json_encode(["message" => "Freelancer Dihapus"]));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
+        } catch (PDOException $e) {
+            $error = ["message" => $e->getMessage()];
+            $response->getBody()->write(json_encode($error));
+            return $response->withHeader('content-type', 'application/json')->withStatus(500);
+        }
+    }
+
 }

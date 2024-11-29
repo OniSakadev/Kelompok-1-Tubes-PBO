@@ -43,6 +43,11 @@ $app->post('/freelance/update/{id}', function (Request $request, Response $respo
     return $controller->update($request, $response, $args);
 });
 
+$app->delete('/freelance/delete/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new FreelanceController($db);
+    return $controller->delete($request, $response, $args);
+});
 
 $app->post('/klien/add', function (Request $request, Response $response) {
     $db = new DB();

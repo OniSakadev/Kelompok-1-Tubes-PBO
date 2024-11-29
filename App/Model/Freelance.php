@@ -87,4 +87,16 @@ class Freelance extends DB
             return ["message" => $e->getMessage()];
         }
     }
+
+    public function delete($id_freelancer)
+    {
+        try {
+            $stmt = $this->db->prepare("DELETE FROM freelancer WHERE id_freelancer = {$id_freelancer}");
+            return $stmt->execute();
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            return ["message" => $e->getMessage()];
+        }
+    }
+
 }
