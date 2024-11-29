@@ -66,7 +66,6 @@ class OrderController extends DB
             return $response->withHeader('content-type', 'application/json')->withStatus(500);
         }
     }
-
     public function delete(Request $request, Response $response, $args): Response
     {
         try {

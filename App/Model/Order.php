@@ -75,7 +75,6 @@ class Order extends DB
             return ["message" => $e->getMessage()];
         }
     }
-
     public function delete($id_order)
     {
         try {

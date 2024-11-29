@@ -194,7 +194,6 @@ $app->post('/order/update/{id}', function (Request $request, Response $response,
     $controller = new OrderController($db);
     return $controller->update($request, $response, $args);
 });
-
 $app->post('/order/delete/{id}', function (Request $request, Response $response, $args) {
     $db = new DB();
     $controller = new OrderController($db);
