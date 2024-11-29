@@ -2,9 +2,7 @@
 
 namespace App\Model;
 
-use App\Model\DB;
-
-class Klien extends DB
+class Klien extends User
 {
     public int $id;
     public string $email;
@@ -55,6 +53,17 @@ class Klien extends DB
             $stmt->bindParam(':username', $this->username);
             $stmt->bindParam(':phone_number', $this->phone);
             $stmt->bindParam(':id_client', $this->id, \PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            return ["message" => $e->getMessage()];
+        }
+    }
+
+    public function delete($id_client)
+    {
+        try {
+            $stmt = $this->db->prepare("DELETE FROM client WHERE id_client = {$id_client}");
             return $stmt->execute();
         } catch (\PDOException $e) {
             http_response_code(500);
