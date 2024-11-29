@@ -36,13 +36,13 @@ class PaymentController extends DB
         try {
             $id_payment = $args['id'];
             $payment = new Payment($this->db);
-            $paymentData = $payment->getAllPayment($id_payment);
+            $payment->getAllPayment($id_payment);
 
             if (isset($categoryData['id_category'])) {
-                $response->getBody()->write(json_encode($paymentData));
+                $response->getBody()->write(json_encode($payment));
                 return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
             } else {
-                $response->getBody()->write(json_encode($paymentData));
+                $response->getBody()->write(json_encode($payment));
                 return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
             }
         } catch (PDOException $e) {
@@ -82,7 +82,7 @@ class PaymentController extends DB
     public function deletePayment(Request $request, Response $response, $args): Response
     {
         $payment = new Payment($this->db);
-        
+
         try {
             $id_payment = $args['id'];
             $result = $payment->deletePayment($id_payment);
