@@ -10,6 +10,7 @@ use App\Controllers\KlienController;
 use App\Controllers\FreelanceController;
 use App\Controllers\ReviewController;
 use App\Controllers\ServiceController;
+use App\Controllers\PaymentController;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -143,6 +144,30 @@ $app->delete('/service/delete/{id}', function (Request $request, Response $respo
     $db = new DB();
     $controller = new ServiceController($db);
     return $controller->delete($request, $response, $args);
+});
+
+$app->post('/payment/add', function (Request $request, Response $response) {
+    $db = new DB();
+    $controller = new PaymentController($db);
+    return $controller->addPayment($request, $response);
+});
+
+$app->get('/payment/find/{status}', function (Request $request, Response $response) {
+    $db = new DB();
+    $controller = new PaymentController($db);
+    return $controller->getAllPayment($request, $response);
+});
+
+$app->post('/payment/update/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new PaymentController($db);
+    return $controller->updatePayment($request, $response, $args);
+});
+
+$app->delete('/payment/delete/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new PaymentController($db);
+    return $controller->deletePayment($request, $response, $args);
 });
 
 $app->run();
