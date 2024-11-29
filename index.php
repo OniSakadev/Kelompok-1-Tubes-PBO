@@ -135,6 +135,12 @@ $app->post('/service/create', function (Request $request, Response $response) {
     return $controller->create($request, $response);
 });
 
+$app->get('/service/getAllServices', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $service= new ServiceController($db);
+    return $service->getAllServices($request, $response, $args);
+});
+
 $app->get('/service/find/{id}', function (Request $request, Response $response, $args) {
     $db = new DB();
     $controller = new ServiceController($db);

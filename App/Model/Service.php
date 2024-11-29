@@ -45,6 +45,19 @@ class Service extends DB
     }
 
     // Get all services
+    public function getAllServices()
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM service");
+            $stmt->execute();
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            http_response_code(500);
+            return ["message" => $e->getMessage()];
+        }
+    }
+
+    //find services
     public function find($id_service)
     {
         $stmt = $this->db->prepare("SELECT * FROM service WHERE id_service = {$id_service}");

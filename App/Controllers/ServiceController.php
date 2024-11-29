@@ -36,6 +36,21 @@ class ServiceController extends DB
         }
     }
 
+    public function getAllServices(Request $request, Response $response): Response
+    {
+        try {
+            $service = new Service($this->db);
+            $services = $service->getAllServices();
+
+            $response->getBody()->write(json_encode($services));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        } catch (PDOException $e) {
+            $error = ["message" => $e->getMessage()];
+            $response->getBody()->write(json_encode($error));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+        }
+    }
+
     public function find(Request $request, Response $response, $args): Response
     {
         try {
