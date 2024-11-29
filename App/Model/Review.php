@@ -35,7 +35,7 @@ class Review extends DB
         if ($stmt->execute()) {
             $review = $stmt->fetch(\PDO::FETCH_ASSOC);
             $this->id_review = $review['id_review'];
-            $this->id_review = $review['id_freelancer'];
+            $this->id_freelancer = $review['id_freelancer'];
             $this->id_client = $review['id_client'];
             $this->rating = $review['rating'];
             $this->comment = $review['comment'];

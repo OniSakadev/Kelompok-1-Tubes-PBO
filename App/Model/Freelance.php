@@ -2,10 +2,9 @@
 
 namespace App\Model;
 
-use App\Model\DB;
 use PDOException;
 
-class Freelance extends DB
+class Freelance extends User
 {
     public int $id;
     public string $email;
@@ -81,6 +80,17 @@ class Freelance extends DB
             $stmt->bindParam(':skills', $this->skill);
             $stmt->bindParam(':about_you', $this->about);
             $stmt->bindParam(':id_freelancer', $this->id, \PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            return ["message" => $e->getMessage()];
+        }
+    }
+
+    public function delete($id_freelancer)
+    {
+        try {
+            $stmt = $this->db->prepare("DELETE FROM freelancer WHERE id_freelancer = {$id_freelancer}");
             return $stmt->execute();
         } catch (\PDOException $e) {
             http_response_code(500);
