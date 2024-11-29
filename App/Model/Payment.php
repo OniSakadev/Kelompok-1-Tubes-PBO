@@ -54,7 +54,7 @@ class Payment extends DB
             $stmt->bindParam(':id_payment', $id_payment);
             $stmt->bindParam(':payment_method', $payment_method);
             $stmt->execute();
-            
+
             if ($stmt->rowCount() > 0) {
                 return ["success" => true];
             }

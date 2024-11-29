@@ -195,4 +195,15 @@ $app->get('/order/find/{id}', function (Request $request, Response $response, $a
     return $controller->find($request, $response, $args);
 });
 
+$app->post('/order/update/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new OrderController($db);
+    return $controller->update($request, $response, $args);
+});
+$app->post('/order/delete/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new OrderController($db);
+    return $controller->delete($request, $response, $args);
+});
+
 $app->run();
