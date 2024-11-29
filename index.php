@@ -103,4 +103,15 @@ $app->post('/category/tambah', function (Request $request, Response $response) {
     return $controller->tambah($request, $response);
 });
 
+$app->post('/category/update/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new CategoryController($db);
+    return $controller->update($request, $response, $args);
+});
+$app->post('/category/delete/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new CategoryController($db);
+    return $controller->delete($request, $response, $args);
+});
+
 $app->run();
