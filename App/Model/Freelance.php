@@ -2,10 +2,9 @@
 
 namespace App\Model;
 
-use App\Model\DB;
 use PDOException;
 
-class Freelance extends DB
+class Freelance extends User
 {
     public int $id;
     public string $email;
