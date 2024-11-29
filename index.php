@@ -118,6 +118,7 @@ $app->post('/category/update/{id}', function (Request $request, Response $respon
 $app->post('/category/delete/{id}', function (Request $request, Response $response, $args) {
     $db = new DB();
     $controller = new CategoryController($db);
+});
 
 $app->post('/service/create', function (Request $request, Response $response) {
     $db = new DB();
