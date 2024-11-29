@@ -165,10 +165,10 @@ $app->post('/payment/add', function (Request $request, Response $response) {
     return $controller->addPayment($request, $response);
 });
 
-$app->get('/payment/find/{status}', function (Request $request, Response $response) {
+$app->get('/payment/find/{status}', function (Request $request, Response $response, $args) {
     $db = new DB();
     $controller = new PaymentController($db);
-    return $controller->getAllPayment($request, $response);
+    return $controller->getAllPayment($request, $response, $args);
 });
 
 $app->post('/payment/update/{id}', function (Request $request, Response $response, $args) {
