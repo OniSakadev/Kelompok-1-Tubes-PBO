@@ -9,6 +9,7 @@ use Selective\BasePath\BasePathMiddleware;
 use App\Controllers\KlienController;
 use App\Controllers\FreelanceController;
 use App\Controllers\ReviewController;
+use App\Controllers\ServiceController;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -42,6 +43,11 @@ $app->post('/freelance/update/{id}', function (Request $request, Response $respo
     return $controller->update($request, $response, $args);
 });
 
+$app->delete('/freelance/delete/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new FreelanceController($db);
+    return $controller->delete($request, $response, $args);
+});
 
 $app->post('/klien/add', function (Request $request, Response $response) {
     $db = new DB();
@@ -108,9 +114,32 @@ $app->post('/category/update/{id}', function (Request $request, Response $respon
     $controller = new CategoryController($db);
     return $controller->update($request, $response, $args);
 });
+
 $app->post('/category/delete/{id}', function (Request $request, Response $response, $args) {
     $db = new DB();
     $controller = new CategoryController($db);
+
+$app->post('/service/create', function (Request $request, Response $response) {
+    $db = new DB();
+    $controller = new ServiceController($db);
+    return $controller->create($request, $response);
+});
+
+$app->get('/service/find/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new ServiceController($db);
+    return $controller->find($request, $response, $args);
+});
+
+$app->post('/service/update/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new ServiceController($db);
+    return $controller->update($request, $response, $args);
+});
+
+$app->delete('/service/delete/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new ServiceController($db);
     return $controller->delete($request, $response, $args);
 });
 
