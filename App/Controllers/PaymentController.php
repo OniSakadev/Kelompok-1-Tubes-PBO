@@ -10,25 +10,18 @@ use PDOException;
 
 class PaymentController extends DB
 {
-    private $payment;
-
-    public function __construct()
-    {
-        $this->payment = new Payment();
-    }
-
     public function addPayment(Request $request, Response $response): Response
     {
         $data = $request->getParsedBody();
-        try {
-            $result = $this->payment->addPayment(
-                $data["id_order"],
-                $data["payment_method"],
-                $data["payment_status"],
-                $data["payment_date"],
-                $data["total_price"]
-            );
+        $payment = new Payment($this->db);
 
+        try {
+            $payment->id_order = $data['id_order'];
+            $payment->payment_method = $data['payment_method'];
+            $payment->payment_status = $data['payment_status'];
+            $payment->payment_date = $data['payment_date'];
+            $payment->total_price = $data['total_price'];
+            $result = $payment->addPayment();
             $response->getBody()->write(json_encode(["success" => true, "data" => $result]));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
         } catch (PDOException $e) {
@@ -38,12 +31,20 @@ class PaymentController extends DB
         }
     }
 
-    public function getAllPayment(Request $request, Response $response): Response
+    public function getAllPayment(Request $request, Response $response, $args): Response
     {
         try {
-            $payments = $this->payment->getAllPayment();
-            $response->getBody()->write(json_encode($payments));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+            $id_payment = $args['id'];
+            $payment = new Payment($this->db);
+            $paymentData = $payment->getAllPayment($id_payment);
+
+            if (isset($categoryData['id_category'])) {
+                $response->getBody()->write(json_encode($paymentData));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+            } else {
+                $response->getBody()->write(json_encode($paymentData));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+            }
         } catch (PDOException $e) {
             $error = ["message" => $e->getMessage()];
             $response->getBody()->write(json_encode($error));
@@ -54,20 +55,22 @@ class PaymentController extends DB
     public function updatePayment(Request $request, Response $response, $args): Response
     {
         $data = $request->getParsedBody();
-        $id_payment = $args['id'];
+        $payment = new Payment($this->db);
         try {
-            $result = $this->payment->updatePayment(
-                $id_payment,
-                $data["id_order"],
-                $data["payment_method"],
-                $data["payment_status"],
-                $data["payment_date"],
-                $data["total_price"]
-            );
+            $payment->id_payment = $args['id_payment'];
+            $payment->id_order = $data['id_order'];
+            $payment->payment_method = $data['payment_method'];
+            $payment->payment_status = $data['payment_status'];
+            $payment->payment_date = $data['payment_date'];
+            $payment->total_price = $data['total_price'];
+            $result = $payment->updatePayment();
 
-            if ($result) {
-                $response->getBody()->write(json_encode(["success" => true]));
+            if ($result['success']) {
+                $response->getBody()->write(json_encode($result));
                 return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+            } else {
+                $response->getBody()->write(json_encode($result));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
             }
         } catch (PDOException $e) {
             $error = ["message" => $e->getMessage()];
@@ -78,9 +81,11 @@ class PaymentController extends DB
 
     public function deletePayment(Request $request, Response $response, $args): Response
     {
-        $id_payment = $args['id'];
+        $payment = new Payment($this->db);
+        
         try {
-            $result = $this->payment->deletePayment($id_payment);
+            $id_payment = $args['id'];
+            $result = $payment->deletePayment($id_payment);
 
             if ($result) {
                 $response->getBody()->write(json_encode(["message" => "Payment deleted successfully"]));
