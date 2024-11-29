@@ -7,6 +7,7 @@ use Slim\Factory\AppFactory;
 use Selective\BasePath\BasePathMiddleware;
 use App\Controllers\KlienController;
 use App\Controllers\FreelanceController;
+use App\Controllers\OrderController;
 use App\Controllers\ReviewController;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -84,5 +85,16 @@ $app->post('/review/delete/{id}', function (Request $request, Response $response
     return $controller->delete($request, $response, $args);
 });
 
+$app->post('/order/add', function (Request $request, Response $response) {
+    $db = new DB();
+    $controller = new OrderController($db);
+    return $controller->tambah($request, $response);
+});
+
+$app->get('/order/find/{id}', function (Request $request, Response $response, $args) {
+    $db = new DB();
+    $controller = new OrderController($db);
+    return $controller->find($request, $response, $args);
+});
 
 $app->run();
