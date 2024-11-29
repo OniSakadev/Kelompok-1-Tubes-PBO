@@ -8,15 +8,22 @@ use PDOException;
 
 class Payment extends DB
 {
-    public function addPayment($id_order, $payment_method, $payment_status, $payment_date, $total_price)
+    public int $id;
+    public int $id_order;
+    public string $payment_method;
+    public string $payment_status;
+    public string $payment_date;
+    public float $price;
+
+    public function addPayment()
     {
         try {
             $stmt = $this->db->prepare("INSERT INTO payment (id_order, payment_method, payment_status, payment_date, total_price) VALUES (:id_order, :payment_method, :payment_status, :payment_date, :total_price)");
-            $stmt->bindParam(':id_order', $id_order);
-            $stmt->bindParam(':payment_method', $payment_method);
-            $stmt->bindParam(':payment_status', $payment_status);
-            $stmt->bindParam(':payment_date', $payment_date);
-            $stmt->bindParam(':total_price', $total_price);
+            $stmt->bindParam(':id_order', $this->id_order);
+            $stmt->bindParam(':payment_method', $this->payment_method);
+            $stmt->bindParam(':payment_status', $this->payment_status);
+            $stmt->bindParam(':payment_date', $this->payment_date);
+            $stmt->bindParam(':price', $this->price);
             $stmt->execute();
             return ["success" => true];
         } catch (\PDOException $e) {
@@ -25,24 +32,18 @@ class Payment extends DB
         }
     }
 
-    public function getAllPayment($status = 'completed', $offset = 0, $limit = 10)
+    public function getAllPayment($payment_status)
     {
-        try {
-            $stmt = $this->db->prepare("SELECT * FROM payment WHERE payment_status = :status LIMIT :offset, :limit");
-            $stmt->bindValue(':status', $status);
-            $stmt->bindValue(':offset', (int)$offset);
-            $stmt->bindValue(':limit', (int)$limit);
-
-            $stmt->execute();
-
-            $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            return [
-                "data" => $payments
-            ];
-        } catch (\PDOException $e) {
-            http_response_code(500);
-            return ["message" => $e->getMessage()];
+        $stmt = $this->db->prepare("SELECT * FROM payment WHERE payment_status = {$payment_status}");
+        if ($stmt->execute()) {
+            $payment = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $this->id = $payment['id_payment'];
+            $this->id_order = $payment['id_order'];
+            $this->payment_method = $payment['payment_method'];
+            $this->payment_status = $payment['payment_status'];
+            $this->payment_date = $payment['payment_date'];
+        } else {
+            $payment = null;
         }
     }
 
