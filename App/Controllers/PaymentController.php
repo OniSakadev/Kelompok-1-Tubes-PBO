@@ -38,7 +38,7 @@ class PaymentController extends DB
             $payment = new Payment($this->db);
             $payment->getAllPayment($id_payment);
             $response->getBody()->write(json_encode($payment));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);    
+            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
         } catch (PDOException $e) {
             $error = ["message" => $e->getMessage()];
             $response->getBody()->write(json_encode($error));
@@ -51,7 +51,7 @@ class PaymentController extends DB
         $data = $request->getParsedBody();
         $payment = new Payment($this->db);
         try {
-            $payment->id_payment = $args['id_payment'];
+            $payment->id_payment = $args['id'];
             $payment->id_order = $data['id_order'];
             $payment->payment_method = $data['payment_method'];
             $payment->payment_status = $data['payment_status'];
@@ -59,7 +59,7 @@ class PaymentController extends DB
             $payment->total_price = $data['total_price'];
             $result = $payment->updatePayment();
 
-            if ($result['success']) {
+            if ($result) {
                 $response->getBody()->write(json_encode($result));
                 return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
             } else {
